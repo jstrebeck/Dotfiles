@@ -1,0 +1,7 @@
+#!/bin/bash
+results=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*$1*" --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value | [0], InstanceId]' | jq -r '(.[] []) | @tsv' | fzf)
+
+selected=$(echo $results | awk '{print $NF}')
+
+echo "Starting a session to using $results"
+aws ssm start-session --target $selected

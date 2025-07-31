@@ -1,0 +1,6 @@
+#!/bin/bash
+read -p "What is your first string: " STRING1
+read -p "What is your other string: " STRING2
+
+vimdiff <(echo "$STRING1") <(echo "$STRING2")
+

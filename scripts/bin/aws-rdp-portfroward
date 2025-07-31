@@ -1,0 +1,18 @@
+#!/bin/bash
+results=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*$1*" --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value | [0], InstanceId]' | jq -r '(.[] []) | @tsv' | fzf)
+selected=$(echo $results | awk '{print $NF}')
+#Port enumeration
+FIRST_PORT="55678"
+if [ -d "/tmp/rdp-ports" ]; then
+  echo "The folder contains portsin use..."
+  LAST_PORT=$(ls /tmp/rdp-ports | sort -n | tail -1)
+  PORT=$((LAST_PORT + 1))
+  touch /tmp/rdp-ports/$PORT
+  echo "Next port number is $PORT"
+else
+  mkdir -p /tmp/rdp-ports && touch /tmp/rdp-ports/$FIRST_PORT
+  PORT=$FIRST_PORT
+fi
+echo "Starting a session to using $results"
+echo "Please connect to localhost:$PORT"
+aws ssm start-session --target $selected --document-name AWS-StartPortForwardingSession --parameters "localPortNumber=$PORT,portNumber=3389"

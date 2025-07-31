@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/jstrebeck/.zsh/completions:"* ]]; then export FPATH="/home/jstrebeck/.zsh/completions:$FPATH"; fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -114,7 +116,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 export PATH=~/bin:$PATH
 
 alias gg='lazygit'
-alias y='yazi'
+# alias y='yazi'
 
 #Python env
 alias activate='source venv/bin/activate'
@@ -173,7 +175,7 @@ alias gp-restart='launchctl unload /Library/LaunchAgents/com.paloaltonetworks.gp
 
 
 #Docker
-alias docker-stopall='docker rm -f $(docker ps -aq)'
+alias docker-stopall='docker rm -f $(docker ps -aq) || echo "No running containers"'
 ##PT-microservices
 alias aws-ecrsignin=""
 alias docker-buildssl="docker build --target ssl -t $(basename $(pwd)) ."
@@ -214,6 +216,8 @@ eval "$(pyenv init -)"
 eval `ssh-agent -s`
 ssh-add ~/.ssh/devcloud
 
+#Reset RDP ports
+alias reset-ports="rm -rf /tmp/rdp-ports"
 
 #VIM Mode
 set -o vi
@@ -247,3 +251,13 @@ export NVM_DIR="$HOME/.config/nvm"
 
 #Battery
 alias batt='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "state|to\ full|percentage|to \empty"'
+. "/home/jstrebeck/.deno/env"
+
+
+#Reboot
+alias ssn='sudo shutdown now'
+alias srn='sudo reboot now'
+
+
+#Kube
+alias kns='kubens'

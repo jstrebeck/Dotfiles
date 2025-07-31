@@ -1,0 +1,22 @@
+#!/bin/bash
+
+FILE_PATH="/home/$USER/.local/share/remmina"
+FILE="$FILE_PATH/template.remmina"
+if [ -e "$FILE" ]; then                                     
+  echo "Template fiels exists in $FILE"                                     
+else                                                        
+  echo "File does not exist. Please make one in $FILE"
+fi
+
+echo -n "Enter name of server: " && read NAME
+echo -n "Enter IP of server: " && read IP
+GROUP=$(cat /home/$USER/.local/share/remmina/* | grep group | sort | uniq | cut -d "=" -f2 | fzf)
+
+NEW_FILE="${FILE_PATH}/${GROUP}_${NAME}_${IP}.remmina"
+echo "Creating $NEW_FILE"
+cp $FILE $NEW_FILE
+
+sed -i "s/NAME/$NAME/g" $NEW_FILE
+sed -i "s/IP/$IP/g" $NEW_FILE
+sed -i "s/GROUP/$GROUP/g" $NEW_FILE
+sed -i "s/USER/$USER/g" $NEW_FILE
